@@ -1,129 +1,104 @@
-'use strict';
-import {
-    fib
-} from './lab2.js';
+import { fib } from './lab2.js';
+
 /**
- * Программа возвращает дробную часть числа
- * @param {number} num 
- * @returns дробную часть числа
+ * Возвращает дробную часть числа, округленную до двух знаков после запятой.
+ * Корректно обрабатывает отрицательные числа.
+ * 
+ * @param {number} num - Исходное число.
+ * @returns {number} Дробная часть числа.
  */
 export function getDecimal(num) {
-    if (Math.trunc(num) == num) {
-        return 0;
-    }
-    else if (num < 0) {
-        return num - (-Math.ceil(-num));
-    }
-
-    if (num > 1) {
-        return +(num - Math.trunc(num)).toFixed(10);
-    }
-}
-
-
-/**
- * Функция  возвращает строку str с заглавным первым символом
- * @param {string} str 
- * @returns  возвращает строку str с заглавным первым символом
- */
-export function ucFirst(str) {
-    if (!str) {
-        return str;
-    }
-    else {
-        return str[0].toUpperCase() + str.slice(1);
-    }
+    return +(num >= 0 ? num % 1 : 1 + (num % 1)).toFixed(2);
 }
 
 /**
- * Нормализует URL, добавляя https:// в начале
- * @param {string} url - Адрес сайта
- * @id70533735 (@returns) {string} Нормализованный URL
+ * Нормализует URL-адрес, добавляя или заменяя протокол на 'https://'.
  * 
- * @example
- * normalizeUrl('yandex.ru') => 'https://yandex.ru'
- * normalizeUrl('http://yandex.ru') => 'https://yandex.ru'
- * normalizeUrl('https://yandex.ru') => 'https://yandex.ru'
- * normalizeUrl('https.ru') => 'https://https.ru'
+ * @param {string} url - Исходный URL-адрес.
+ * @returns {string} Нормализованный URL-адрес с протоколом https.
  */
-function normalizeUrl(url) {
-    let cleanUrl = url;
-    if (cleanUrl.startsWith('http://')) {
-        cleanUrl = cleanUrl.slice(7);
-    } else if (cleanUrl.startsWith('https://')) {
-        cleanUrl = cleanUrl.slice(8);
-    }
-    return 'https://' + cleanUrl;
+export function normalizeUrl(url) {
+   if (url.startsWith('http://')) {
+    return 'https://' + url.slice(7);
+   }
+   if (url.startsWith('https://')) {
+    return url;
+   }
+   return 'https://' + url;
 }
+
 /**
- * Функция возвращает true, если строка str содержит 'viagra' или 'XXX', а иначе false
- * @param {string} str 
- * @returns возвращает true, если строка str содержит 'viagra' или 'XXX', а иначе false
+ * Проверяет строку на наличие спам-слов ('viagra' или 'xxx').
+ * Регистр символов не учитывается.
+ * 
+ * @param {string} str - Проверяемая строка.
+ * @returns {boolean} true, если строка содержит спам; иначе false.
  */
 export function checkSpam(str) {
-    let newstr = str.toLowerCase();
-    return newstr.includes('viagra') || newstr.includes('xxx');
+    const lowerStr = str.toLowerCase();
+    return lowerStr.includes('viagra') || lowerStr.includes('xxx');
 }
 
-
 /**
- * Функция проверяет длину строки str, и если она превосходит maxlength – заменяет конец str на символ многоточие "…"
- * @param {string} str 
- * @param {number} maxlength 
- * @returns отформатированная строка 
+ * Усекает строку до заданной максимальной длины, добавляя троеточие в конец.
+ * Длина итоговой строки вместе с троеточием не превышает maxlength.
+ * 
+ * @param {string} str - Исходная строка.
+ * @param {number} maxlength - Максимально допустимая длина строки.
+ * @returns {string} Усеченная или исходная строка.
  */
 export function truncate(str, maxlength) {
-    if (str.length < maxlength) {
-        return str;
-    }
-    else {
+    if (str.length > maxlength)
         return str.slice(0, maxlength - 1) + '…';
-    }
+    return str;
 }
 
-
 /**
- *  Функция преобразует строку вида 'var-test-text' в 'varTestText'
- * @param {string} str 
- * @returns строка вида'varTestText'
+ * Преобразует строку из формата camel-case (через дефис) в формат camelCase.
+ * Например: "my-long-word" преобразует в "myLongWord".
+ * 
+ * @param {string} str - Строка с дефисами.
+ * @returns {string} Строка в формате camelCase.
  */
 export function camelize(str) {
-    let str_copy = str.split("-");
-    let strnew = "";
-    for (let i = 0; i <= str_copy.length - 1; i++) {
-        if (i == 0) strnew = str_copy[0];
-        else strnew += ucFirst(str_copy[i]);
-    }
-    return strnew;
+    return str.split('-').map((word, index) => {
+        if (index === 0)
+            return word;
+        return word ? word[0].toUpperCase() + word.slice(1) : '';
+    }).join('');
 }
+
 /**
- * Функция  возвращает массив, заполненный числами Фибоначчи до n-го (не включая его)
- * @param {number} n 
- * @returns  массив, заполненный числами Фибоначчи до n-го (не включая его)
+ * Генерирует массив, содержащий первые n чисел Фибоначчи.
+ * Использует внешнюю функцию fib() для расчета каждого числа.
+ * 
+ * @param {number} n - Количество чисел Фибоначчи для генерации.
+ * @returns {number[]} Массив с числами Фибоначчи.
  */
 export function fibs(n) {
-    let mas = [];
-    for (let i = 0; i < n; i += 1) {
-        mas.push(fib(i));
+    const result = [];
+    for (let i = 0; i < n; i++) {
+        result.push(fib(i));
     }
-    return mas;
+    return result;
 }
+
 /**
- * Функция возвращает массив из тех же элементов, но отсортированный по убыванию
- * @param {array} arr 
- * @returns  массив из тех же элементов, но отсортированный по убыванию
+ * Возвращает массив уникальных значений.
+ * @template T
+ * @param {Array<T>} arr - Входной массив.
+ * @returns {Array<T>} Массив уникальных значений.
  */
 export function arrReverseSorted(arr) {
-    let arr_copy = arr.slice();
-    return arr_copy.sort(function (a, b) {
-        return b - a;
-    })
+    return arr.slice().sort((a, b) => b - a);
 }
+
 /**
- * Функция массив уникальных, не повторяющихся значений массива arr
- * @param {array} arr 
- * @returns массив уникальных, не повторяющихся значений массива arr
+ * Возвращает новый массив, содержащий только уникальные элементы исходного массива.
+ * 
+ * @param {Array} arr - Исходный массив с возможными дубликатами.
+ * @returns {Array} Массив, состоящий из уникальных элементов.
  */
 export function unique(arr) {
-    return Array.from(new Set(arr));
+    return [...new Set(arr)];
 }
