@@ -35,7 +35,26 @@ export function ucFirst(str) {
     }
 }
 
-
+/**
+ * Нормализует URL, добавляя https:// в начале
+ * @param {string} url - Адрес сайта
+ * @id70533735 (@returns) {string} Нормализованный URL
+ * 
+ * @example
+ * normalizeUrl('yandex.ru') => 'https://yandex.ru'
+ * normalizeUrl('http://yandex.ru') => 'https://yandex.ru'
+ * normalizeUrl('https://yandex.ru') => 'https://yandex.ru'
+ * normalizeUrl('https.ru') => 'https://https.ru'
+ */
+function normalizeUrl(url) {
+    let cleanUrl = url;
+    if (cleanUrl.startsWith('http://')) {
+        cleanUrl = cleanUrl.slice(7);
+    } else if (cleanUrl.startsWith('https://')) {
+        cleanUrl = cleanUrl.slice(8);
+    }
+    return 'https://' + cleanUrl;
+}
 /**
  * Функция возвращает true, если строка str содержит 'viagra' или 'XXX', а иначе false
  * @param {string} str 
