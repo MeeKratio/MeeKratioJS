@@ -81,6 +81,28 @@
 
         });
 
+        describe('normalizeUrl(url) - нормализация URL', function() {
+            it('должна добавлять https:// если его нет', function() {
+                expect(normalizeUrl('yandex.ru')).to.equal('https://yandex.ru');
+                expect(normalizeUrl('google.com')).to.equal('https://google.com');
+            });
+            
+            it('должна заменять http:// на https://', function() {
+                expect(normalizeUrl('http://yandex.ru')).to.equal('https://yandex.ru');
+                expect(normalizeUrl('http://google.com')).to.equal('https://google.com');
+            });
+            
+            it('должна оставлять https:// без изменений', function() {
+                expect(normalizeUrl('https://yandex.ru')).to.equal('https://yandex.ru');
+                expect(normalizeUrl('https://google.com')).to.equal('https://google.com');
+            });
+            
+            it('должна правильно обрабатывать URL с http в названии', function() {
+                expect(normalizeUrl('https.ru')).to.equal('https://https.ru');
+                expect(normalizeUrl('http.ru')).to.equal('https://http.ru');
+            });
+        });
+
         describe("truncate", function () {
 
             it("truncate('Мама мыла раму.', 100) => 'Мама мыла раму.'", function () {
