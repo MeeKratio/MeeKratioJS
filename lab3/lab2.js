@@ -1,77 +1,61 @@
-'use strict';
-/**
- * Возводит х в степень n 
- * @param {number} x основание степени
- * @param {number} n степень
- * @returns x  в степени n
- */
-function pow(x, n) {
-    return x ** n;
-}
-/**
- * Возвращает сумму от 1 до n
- * @param {number} n максимальное число
- * @returns сумму от 1 до n
- */
-function sumTo(n) {
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-        sum += i
-    }
-    return sum;
-}
-
-/**
- * Считает факториал числа n
- * @param {number} n основание факториала
- * @returns факториал  n
- */
-function factorial(n) {
-    if (n <= 1) return 1n;
-    else {
-        return BigInt(n) * factorial(n - 1);
-    }
-}
-/**
- * n-ый член ряда Фибоначчи
- * @param {number} n 
- * @returns  n-ый член ряда Фибоначчи
- */
-export function fib(n) {
-    let a = BigInt(1);
-    let b = BigInt(1);
-    if (n == BigInt(0)) {
-        return BigInt(0);
-    }
-    else {
-        for (let i = BigInt(3); i <= n; i++) {
-           let c = a + b;
-            a = b;
-            b = c;
-        }
-        return b;
-    }
-}
-/**
- * Возвращает анонимную булеву функцию результата сравнения числа с x
- * @param {number} x число для сравнения
- * @returns возвращает анонимную булеву функцию результата сравнения числа с x
- */
-function compare(x) {
-    return function (y) {
-        if (y > x) return true;
-        else if (y < x) return false;
-        else if (y == x) return null;
-    }
-}
-/**
- * Сумма всех принятых аргументов функцией 
- * @returns сумму всех принятых аргументов функцией 
- */
-function sum() {
-    var result = 0;
-    for (let i = 0; i < arguments.length; i++) {
-        result += arguments[i]
+// Функция pow(x,n), которая возвращает x в степени n (n - целое число).
+export function pow(x, n) {
+    if (n === 0) return 1;
+    if (n < 0) return 1 / pow(x, -n);
+    
+    let result = 1;
+    for (let i = 0; i < n; i++) {
+        result *= x;
     }
     return result;
+}
+
+// Функция sumTo(n), которая для данного натурального n вычисляет сумму чисел от 1 до n включительно.
+export function sumTo(n) {
+    return n * (n + 1) / 2;
+}
+
+// Функция-предикат isLeapYear(year), которая проверят год year на високосность.
+export function isLeapYear(year) {
+    return (year % 400 === 0) || (year % 100 !== 0 && year % 4 === 0);
+}
+
+// Функция factorial(n), которая возвращает факториал числа n!, используя рекурсивный вызов n!= n*(n-1)!.
+export function factorial(n) {
+    if (n === 0) return 1n;
+    return BigInt(n) * factorial(n - 1);
+}
+
+// Функция fib(n), которая возвращает n-е число Фибоначчи.
+export function fib(n) {
+    let a = 0n;
+    let b = 1n;
+    if (n === 0) return a;
+    
+    for (let i = 2; i <= n; i++) {
+        const c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+}
+
+// Функция compare(), которая принимает целочисленное значение x и возвращает анонимную функцию.
+export function compare(x) {
+    return function(y) {
+        if (y > x) return true;
+        if (y < x) return false;
+        return null;
+    };
+}
+
+//Функция sum(...), которая возвращает сумму всех своих аргументов.
+export function sum(...args) {
+    return args.reduce((total, current) => total + current, 0);
+}
+
+// Функция addBlackSpot(), которая принимает на вход объект и возвращает этот объект с добавленным к нему символьным свойством blackSpot=true, которое бёрется из глобального реестра символов.
+export function addBlackSpot(obj) {
+    obj[Symbol.for("blackSpot")] = true;
+    return obj;
 }
